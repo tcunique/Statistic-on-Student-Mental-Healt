@@ -5,12 +5,14 @@ output: html_notebook
 
 ```{r}
 sub_sante_mentale=read.csv("sub_sante_mentale.csv",sep=",")
+sub_sante_mentale <- sub_sante_mentale[sub_sante_mentale$depressif %in% c("Oui", "Non"), ]
 
 # Convertir toutes les variables du dataframe en facteurs
 for (column in names(sub_sante_mentale)) {
   sub_sante_mentale[[column]] <- as.factor(sub_sante_mentale[[column]])
 }
 
+# Subsetting the dataframe to keep only rows where depressif is "Oui" or "Non"
 sub_sante_mentale
 ```
 
