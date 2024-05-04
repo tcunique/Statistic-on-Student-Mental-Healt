@@ -48,7 +48,7 @@ head(sub_sante_mentale)
 
 
 
-On fait le test du chi2 afin de savoir quelles sont les variables les plus significatifs
+On fait le test du chi2 afin de savoir quelles sont les variables les plus significatifs. On crée un tableau avec les valeur des p value et les label liés à ces pvalues. Toutes les variables qui ont une valeur dépendance dans la colonne dépendance valide l'hypothèse de dépendance. On se concentrera surtout sur les variables les plus significatives.
 ```{r}
 # Création d'une liste pour stocker les résultats des tests
 chi2_results <- list()
@@ -105,10 +105,10 @@ write.csv(result_table, file = "result_chi2_table.csv", row.names = FALSE)
 
 
 
-A partir des résultats du chi2, on crée le csv en prenant en compte que les variables qui sont très significative
+A partir des résultats du chi2, on crée le csv en prenant en compte que les variables qui sont significatives et très significative.
 ```{r}
 # Sélection des colonnes avec une valeur p < 0.05
-significant_cols <- result_table$p_value < 0.001
+significant_cols <- result_table$p_value < 0.01
 selected_cols <- result_table$variable[significant_cols]
 
 # Création du sous-ensemble avec les colonnes sélectionnées
@@ -117,7 +117,6 @@ sub_sante_mentale <- sante_mentale[selected_cols]
 # Affichage des premières lignes du sous-ensemble
 head(sub_sante_mentale)
 
-write.csv(sub_sante_mentale, file = "sub_sante_mentale.csv", row.names = FALSE)
 
 ```
 

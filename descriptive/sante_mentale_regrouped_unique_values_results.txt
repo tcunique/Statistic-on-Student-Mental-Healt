@@ -1,0 +1,198 @@
+Colonne 'age':
+  Valeurs uniques: ['21-22' '+23' '18-20']
+  Nombre d'entrées uniques: 3
+
+Colonne 'pays_etude':
+  Valeurs uniques: ['France' 'Autres (- 5 occ)' 'Burkina Faso' 'Madagascar' 'Canada']
+  Nombre d'entrées uniques: 5
+
+Colonne 'ville_etude':
+  Valeurs uniques: ['Orsay' 'Autres (- 5 occ)' 'Créteil' 'Paris' 'Lille' 'Ouagadougou'
+ 'Poitiers' 'Antananarivo']
+  Nombre d'entrées uniques: 8
+
+Colonne 'alternance':
+  Valeurs uniques: ['Non' 'Oui']
+  Nombre d'entrées uniques: 2
+
+Colonne 'etudiant_etranger':
+  Valeurs uniques: ['Non' 'Oui']
+  Nombre d'entrées uniques: 2
+
+Colonne 'foyer':
+  Valeurs uniques: ['En famille' 'En colocation' 'En solo']
+  Nombre d'entrées uniques: 3
+
+Colonne 'ville_foyer':
+  Valeurs uniques: ['Aubervilliers' 'Autres (- 5 occ)' 'Paris' 'Lille' 'Ouagadougou'
+ 'Gif-sur-yvette' 'Orsay' 'Antananarivo']
+  Nombre d'entrées uniques: 8
+
+Colonne 'celibataire':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'vie_associative':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'sport':
+  Valeurs uniques: ['1-3 fois par semaine' '+ 4 fois par semaine' 'Presque jamais']
+  Nombre d'entrées uniques: 3
+
+Colonne 'streaming_video':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'type_streaming_video':
+  Valeurs uniques: ['Netflix' 'Disney+' 'Autres' 'Aucun' 'Crunchyroll' 'Canal+' 'Prime video'
+ 'Prime']
+  Nombre d'entrées uniques: 8
+
+Colonne 'streaming_audio':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'type_streaming_audio':
+  Valeurs uniques: ['Spotify' 'Apple music' 'Aucun' 'Autres' 'Youtube music' 'Deezer']
+  Nombre d'entrées uniques: 6
+
+Colonne 'job':
+  Valeurs uniques: ['Non' 'Oui']
+  Nombre d'entrées uniques: 2
+
+Colonne 'job_h_semaine':
+  Valeurs uniques: [ 0.   7.   0.6  8.  21.  10.   2.  12.   1.5 15.   3.   6.   5.  23.
+  4.  20.  17.  16.  13.  18.   9. ]
+  Nombre d'entrées uniques: 21
+
+Colonne 'temps_trajet_ecole':
+  Valeurs uniques: [ 3.   1.   0.   2.5  2.   0.2  0.5  1.5  2.2  1.2  4.   0.4  2.7  0.1
+  0.7 20.   0.3  1.7  2.8  1.3  0.8  0.9  0.6  3.5  2.3 15.   9. ]
+  Nombre d'entrées uniques: 27
+
+Colonne 'mange_a_ta_faim':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'livraison_nourriture':
+  Valeurs uniques: ['1 fois par semaine' 'Presque jamais' '2-3 fois par mois'
+ 'Plusieurs fois par semaine' '1 fois par mois' 'Fois par mois']
+  Nombre d'entrées uniques: 6
+
+Colonne 'alimentation_équilibrée':
+  Valeurs uniques: ['Je suis moyen(ne)' 'Je mange plutôt sainement' 'Je mange pas très sain'
+ 'Je mange très sainement' 'Je ne mange pas sain du tout'
+ 'Je ne mange pas très sainement']
+  Nombre d'entrées uniques: 6
+
+Colonne 'fume':
+  Valeurs uniques: ['Non' 'Ne veux pas se prononcer' 'Oui, environ 2 cigarettes/jour ~'
+ 'Oui, environ 10 cigarettes par jour ~' '1 cigarettes/jour'
+ 'Cigarette électronique' '1 par mois' 'Oui, environ 5 cigarettes/jour ~'
+ 'Un ou deux paquets par mois' 'Soirée' 'Occasionnellement']
+  Nombre d'entrées uniques: 11
+
+Colonne 'alcool':
+  Valeurs uniques: ['Non' 'Oui, mais seulement en soirée' 'Oui, de manière modérée'
+ 'Ne veux pas se prononcer' 'Très rarement'
+ 'Oui, énormément, je me torche la gueule' 'Tres rarement']
+  Nombre d'entrées uniques: 7
+
+Colonne 'passion':
+  Valeurs uniques: ['Non' 'Oui']
+  Nombre d'entrées uniques: 2
+
+Colonne 'vie_sociale':
+  Valeurs uniques: ['Peu active' 'Très active' 'Moyenne']
+  Nombre d'entrées uniques: 3
+
+Colonne 'vie_sociale_periode_controle':
+  Valeurs uniques: ['Peu active' 'Moyenne' 'Très active']
+  Nombre d'entrées uniques: 3
+
+Colonne 'domaine_etude':
+  Valeurs uniques: ["Sciences de l'ingénieur : génie mécanique, génie civil, génie électrique, informatique, génie chimique"
+ 'Sciences de la santé : médecine, soins infirmiers, pharmacologie, santé publique'
+ 'Arts et lettres : littérature, langues et linguistique, beaux-arts (peinture, sculpture, etc.), musique, théâtre'
+ 'Sciences économiques et commerciales : finance, marketing, gestion, comptabilité'
+ 'Mathématiques et statistiques : mathématiques pures, statistiques, mathématiques appliquées'
+ 'Sciences sociales : psychologie, économie, sciences politiques, communication, droit'
+ 'Sciences naturelles : biologie, chimie, physique, géologie, astronomie'
+ "Informatique et technologies de l'information : informatique, réseaux et sécurité informatique, intelligence artificielle"
+ "Éducation : enseignement primaire et secondaire, pédagogie, administration de l'éducation"
+ 'Sciences de la communication : journalisme, relations publiques, communication organisationnelle'
+ 'Sciences politiques et relations internationales : science politique, relations internationales, diplomatie'
+ 'Sciences humaines : histoire, géographie, anthropologie, archéologie, sociologie'
+ 'Logistique' 'Gestion administration publique' 'Hôtellerie-restauration'
+ 'Sciences du comportement : psychologie, sociologie, anthropologie'
+ "Sciences de l'environnement : écologie, gestion de l'environnement, géographie environnementale"]
+  Nombre d'entrées uniques: 17
+
+Colonne 'parents_divorcés':
+  Valeurs uniques: ['Non' 'Ne pas répondre' 'Oui']
+  Nombre d'entrées uniques: 3
+
+Colonne 'Conflits.Familiaux':
+  Valeurs uniques: ['Ne pas répondre' 'Non' 'Oui']
+  Nombre d'entrées uniques: 3
+
+Colonne 'Travail_domicile':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'tiers_temps':
+  Valeurs uniques: ['Oui' 'Non']
+  Nombre d'entrées uniques: 2
+
+Colonne 'situation_financière':
+  Valeurs uniques: ['Difficultés financières persistantes' 'Ne pas répondre'
+ 'Stable financièrement' 'Je ne sais pas'
+ 'Difficultés financières temporaires' 'Aisé financièrement']
+  Nombre d'entrées uniques: 6
+
+Colonne 'signe_astrologique':
+  Valeurs uniques: ['Capricorne (22 décembre - 19 janvier)' 'Gémeaux (21 mai - 20 juin)'
+ 'Scorpion (23 octobre - 21 novembre)' 'Lion (23 juillet - 22 août)'
+ 'Balance (23 septembre - 22 octobre)' 'Vierge (23 août - 22 septembre)'
+ 'Sagittaire (22 novembre - 21 décembre)' 'Bélier (21 mars - 19 avril)'
+ 'Poissons (19 février - 20 mars)' 'Taureau (20 avril - 20 mai)'
+ 'Verseau (20 janvier - 18 février)' 'Cancer (21 juin - 22 juillet)']
+  Nombre d'entrées uniques: 12
+
+Colonne 'niveau_etude':
+  Valeurs uniques: ['BAC+1-3' 'BAC+4-5' 'Doctorat']
+  Nombre d'entrées uniques: 3
+
+Colonne 'difficultées_scolaires':
+  Valeurs uniques: ['Oui' 'Non' 'Je suis moyen(ne)']
+  Nombre d'entrées uniques: 3
+
+Colonne 'anxiété':
+  Valeurs uniques: ['Oui' 'Non' 'Ne veut pas se prononcer']
+  Nombre d'entrées uniques: 3
+
+Colonne 'moyen_financier_suivi_psycho':
+  Valeurs uniques: ['Non' 'Oui']
+  Nombre d'entrées uniques: 2
+
+Colonne 'suivi_psycho':
+  Valeurs uniques: ['Non' 'Oui']
+  Nombre d'entrées uniques: 2
+
+Colonne 'diagnostic_episode_depressif':
+  Valeurs uniques: ['Non' 'Ne pas se prononcer' 'Oui']
+  Nombre d'entrées uniques: 3
+
+Colonne 'depressif':
+  Valeurs uniques: ['Oui' 'Non' 'Je ne sais pas' 'Ne veut pas se prononcer']
+  Nombre d'entrées uniques: 4
+
+Colonne 'suivi_medicale_depressif':
+  Valeurs uniques: ['Non' 'Ne pas se prononcer' 'Oui']
+  Nombre d'entrées uniques: 3
+
+Colonne 'pathologie':
+  Valeurs uniques: ['Oui' 'Non' 'Ne veut pas se prononcer']
+  Nombre d'entrées uniques: 3
+
