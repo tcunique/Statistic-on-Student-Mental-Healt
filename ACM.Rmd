@@ -1,0 +1,96 @@
+---
+title: "projet"
+output: html_document
+date: "2024-04-09"
+---
+
+
+1) ACM
+
+```{r}
+rm(list=ls())
+sante_mentale=read.csv("sante_mentale_regrouped.csv")
+sante_mentale
+```
+
+# 1, analyse d'une sous partie
+# Sous partie
+
+```{r}
+library(dplyr)
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+sub_database <- sante_mentale %>% 
+  dplyr::select(age, pays_etude, alternance, celibataire, sport,niveau_etude, depressif)
+```
+
+
+As_factors of all variables
+```{r}
+# Transforme tout ce qui est en caractère en asfactor
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+# ACM ne marche que avec des factors, il faut donc mettre en factor les âges aussi
+# CONSEIL : Je pense qu'il faudrait regrouper les gens par tranches d'âge aussi
+sub_database$age <- factor(sub_database$age)
+sub_database
+```
+
+# Analyse ACM
+On a toutes les conditions nécessaires au bon fonctionnement de l'ACM maintenant
+```{r}
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results <- MCA(sub_database, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results$eig)
+```
+
+```{r}
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+fviz_mca_var(mca_results, repel = TRUE)
+# Individual factor map colored by 'depressif' levels
+fviz_mca_ind(mca_results, label = "none", habillage = "depressif", 
+               palette = "jco", addEllipses = TRUE, repel = TRUE)
+
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1, 2), repel = TRUE)
+```
+
+
+Prenons maintenat les variables que le tset de chisq 2 nous a conseillé : 
+- ville voyer
+- niveau etude
+- anxiété
+- diagnostic_depressf
+- depressif
+- suivi_medical_depressif
+```{r}
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+sub_database_chisq <- sante_mentale %>% 
+  dplyr::select(ville_foyer, niveau_etude, anxiété, diagnostic_episode_depressif, depressif,suivi_medicale_depressif, alcool, Conflits.Familiaux, tiers_temps, suivi_psycho)
+```
+
+As_factors of all variables
+```{r}
+# Transforme tout ce qui est en caractère en asfactor
+sub_database_chisq[] <- lapply(sub_database_chisq, function(x) if(is.character(x)) factor(x) else x)
+```
+
+# Analyse ACM
+On a toutes les conditions nécessaires au bon fonctionnement de l'ACM maintenant
+```{r}
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results_chisq <- MCA(sub_database_chisq, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results_chisq$eig)
+```
+
+```{r}
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+
+# Visualiser le cercle de corrélation des variables pour les deux premières dimensions
+fviz_mca_var(mca_results_chisq, choice = "mca.cor", axes = c(1, 2), repel = TRUE)
+
+```
