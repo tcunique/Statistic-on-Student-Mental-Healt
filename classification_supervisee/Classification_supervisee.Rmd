@@ -4,7 +4,7 @@ output: html_notebook
 ---
 
 ```{r}
-sub_sante_mentale=read.csv("sub_sante_mentale.csv",sep=",")
+sub_sante_mentale=read.csv("sante_mentale_regrouped.csv")
 sub_sante_mentale <- sub_sante_mentale[sub_sante_mentale$depressif %in% c("Oui", "Non"), ]
 
 # Convertir toutes les variables du dataframe en facteurs
@@ -14,42 +14,14 @@ for (column in names(sub_sante_mentale)) {
 
 # Subsetting the dataframe to keep only rows where depressif is "Oui" or "Non"
 sub_sante_mentale
+
+# Assuming your data frame is named 'data'
+sub_sante_mentale <- sub_sante_mentale[c("ville_foyer", "mange_a_ta_faim", "alcool", "Conflits.Familiaux", 
+                        "tiers_temps", "niveau_etude", "anxiété", "suivi_psycho", 
+                        "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif")]
+
+sub_sante_mentale
 ```
-
-
-Permet de regrouper les Bac +1, +2 et +3, et un autre groupe avec +4, +5
-```{r}
-# Permet de regrouperpar Licence (Bac +1-3) et Master (Bac +4-5) et le reste, comme ça on a moins de catégorie derrière, ça va aider pour l'acm, l'acf etc 
-sub_sante_mentale$niveau_etude <- as.factor(sapply(sub_sante_mentale$niveau_etude, function(x) {
-  if (x %in% c("Bac +1", "Bac +2", "Bac +3")) {
-    "BAC+1-3"
-  } else if (x %in% c("Bac +4", "Bac +5")) {
-    "BAC+4-5"
-  } else {
-    x  # This line ensures that all other levels remain unchanged
-  }
-}))
-```
-
-
-Permet de regrouper les différents pays d'étude
-```{r}
-# C'est la fréquence max qu'on accepte avant de garder comme une catégorie
-threshold <- 5  # Set a threshold for the minimum frequency
-
-# Permet d'avoir la fréquence de différente catégorie de chaque variable de la subdatabase
-level_frequencies <- table(sub_sante_mentale$ville_foyer)
-
-# Permet d'avoir les différentes villes qui sont endessous de la fréquence qu'on a mis
-rare_levels <- names(level_frequencies[level_frequencies < threshold])
-
-# Puis remplace chaque ville qui sont dans la liste rare_levels par other dansla subdatabase
-sub_sante_mentale$ville_foyer <- as.factor(sapply(sub_sante_mentale$ville_foyer, function(level) {
-  if (level %in% rare_levels) "Other" else level
-}))
-```
-
-
 
 
 ```{r}
@@ -72,13 +44,20 @@ aggregate(sub_sante_mentale[], by=list(sub_sante_mentale$depressif), function(x)
 
 ```
 
+```{r}
+library(FactoMineR)
+library(factoextra)
+```
+
 
 # LDA
 ```{r}
-res_lda <- lda(sub_sante_mentale$depressif~., data=sub_sante_mentale.train)
-pred_lda <- predict(res_lda, newdata=sub_sante_mentale.test)$class
-table_lda <- table(Predicted=pred_lda, Actual=sub_sante_mentale.test$depressif)
+# Assuming all data issues are fixed
+res_lda <- lda(depressif ~ ., data = sub_sante_mentale.train)
+pred_lda <- predict(res_lda, newdata = sub_sante_mentale.test)$class
+table_lda <- table(Predicted = pred_lda, Actual = sub_sante_mentale.test$depressif)
 accuracy_lda <- sum(diag(table_lda)) / n.test
+
 ```
 
 
