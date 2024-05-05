@@ -57,6 +57,7 @@ res_lda <- lda(depressif ~ ., data = sub_sante_mentale.train)
 pred_lda <- predict(res_lda, newdata = sub_sante_mentale.test)$class
 table_lda <- table(Predicted = pred_lda, Actual = sub_sante_mentale.test$depressif)
 accuracy_lda <- sum(diag(table_lda)) / n.test
+print(accuracy_lda)
 
 ```
 
@@ -83,8 +84,9 @@ print(confusion_table_lda)
 
 print(sum(diag(confusion_table_lda))/n.test)
 
-accuracy_lda = mean(pred_lda_classe == sub_sante_mentale.test$DIFF)
-print(accuracy_lda)
+#accuracy_lda = mean(pred_lda_classe == sub_sante_mentale.test$DIFF)
+#print(accuracy_lda)
+
 ```
 
 
@@ -123,6 +125,12 @@ accuracy_cart <- sum(diag(table_cart)) / n.test
 pred_cart_prob <- predict(arbre.opt, sub_sante_mentale.test, type="prob")[,2]
 ROC_cart <- roc(sub_sante_mentale.test$depressif, pred_cart_prob)
 plot(ROC_cart, print.auc=TRUE)
+
+confusion_table_cart <- table(Prédiction = pred_cart, Réalité = sub_sante_mentale.test$depressif)
+print(confusion_table_cart)
+print(accuracy_cart)
+
+
 ```
 
 
@@ -140,8 +148,100 @@ accuracy_RF <- sum(diag(table_RF)) / n.test
 pred_RF_prob <- predict(fit_RF, sub_sante_mentale.test, type="prob")[,2]
 ROC_RF <- roc(sub_sante_mentale.test$depressif, pred_RF_prob)
 plot(ROC_RF, print.auc=TRUE)
+
+confusion_table_RF <- table(Prédiction = pred_RF, Réalité = sub_sante_mentale.test$depressif)
+print(confusion_table_RF)
+print(accuracy_RF)
+
+```
+# AdaBoost --------------------------------------------------------------------------
+```{r}
+
+library(gbm)
+library(ROCR)  # To perform ROC analysis
+
+# Convert 'depressif' to a binary numeric variable where "Non" is 0 and "Oui" is 1
+# Ensure that this transformation covers all data
+sub_sante_mentale$depressif_numeric <- ifelse(sub_sante_mentale$depressif == "Oui", 1, 0)
+
+# Split the data into training and test sets
+set.seed(1)  # For reproducibility
+n <- nrow(sub_sante_mentale)
+test_ratio <- 0.2
+n.test <- round(n * test_ratio)
+tr <- sample(1:n, n.test)
+
+sub_sante_mentale.test <- sub_sante_mentale[tr, ]
+sub_sante_mentale.train <- sub_sante_mentale[-tr, ]
+
+# Train the AdaBoost model using the gbm package
+fit.adaboost <- gbm(depressif_numeric ~ ., data = sub_sante_mentale.train, 
+                    distribution = "adaboost", n.trees = 3000, 
+                    cv.folds = 5, shrinkage = 0.01, interaction.depth = 1)
+
+# Determine the optimal number of trees using cross-validation
+B.opt = gbm.perf(fit.adaboost, method="cv")
+
+# Predict on the test dataset using the optimal number of trees
+pred_adaboost <- predict(fit.adaboost, newdata = sub_sante_mentale.test, 
+                         type = "response", n.trees = B.opt)
+
+# Round predictions to obtain binary outcomes
+predicted <- ifelse(pred_adaboost > 0.5, 1, 0)
+
+# Create a confusion matrix and calculate accuracy
+confusion_adaboost <- table(Predicted = predicted, Actual = sub_sante_mentale.test$depressif_numeric)
+accuracy_adaboost <- sum(diag(confusion_adaboost)) / nrow(sub_sante_mentale.test)
+
+# Calculate the AUC
+pred_obj <- prediction(pred_adaboost, sub_sante_mentale.test$depressif_numeric)
+perf_obj <- performance(pred_obj, "auc")
+auc_adaboost <- perf_obj@y.values[[1]]
+
+# Display the results
+print(confusion_adaboost)
+print(paste("Accuracy:", accuracy_adaboost))
+print(paste("AUC:", auc_adaboost))
+
+
 ```
 
+
+# Regression logistique --------------------------------------------------------------
+
+```{r}
+
+### Modèle
+logit.train <- glm(DIFF ~ ., family = binomial , data=data.train)
+
+# régression logistique Lasso
+library(glmnet)
+res_Lasso <- glmnet(as.matrix(data.train[,-1]),data.train$DIFF,family='binomial') 
+plot(res_Lasso, label = TRUE)  # en abscisse : norme des coefficients
+plot(res_Lasso, xvar = "lambda", label = TRUE) # en abscisse : log(lambda)
+sum(coef(res_Lasso, s=exp(?))!=0)
+
+
+cvLasso <- cv.glmnet(as.matrix(data.train[,-1]),data.train$DIFF,family="binomial", type.measure = "class") 
+plot(cvLasso)
+cvLasso$lambda.min
+coef(res_Lasso, s=cvLasso$lambda.min)
+
+#prédiction
+class_logit_lasso=predict(cvLasso, newx = as.matrix(data.test[,-1]), s = 'lambda.min', type = "class")
+
+#Table de confusion et accuracy
+
+
+
+#courbe ROC
+pred_logit_lasso=predict(cvLasso, newx = as.matrix(data.test[,-1]), s = 'lambda.min', type = "response")
+#pred_logit_lasso
+ROC_logit_lasso = roc( data.test$DIFF, pred_logit_lasso)
+ROC_logit_lasso$auc 
+
+
+```
 
 # Comparaison des modèles
 ```{r}
