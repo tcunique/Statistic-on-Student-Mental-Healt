@@ -19,8 +19,10 @@ sante_mentale
 ```{r}
 library(dplyr)
 # Permet de créer une sous base de donnée avec juste les variables qu'on veut
-sub_database <- sante_mentale %>% 
-  dplyr::select(age, pays_etude, alternance, celibataire, sport,niveau_etude, depressif)
+# sub_database <- sante_mentale %>% 
+  # dplyr::select(age, pays_etude, alternance, celibataire, sport,niveau_etude, depressif,anxiété)
+
+sub_database <- sante_mentale
 ```
 
 
@@ -94,3 +96,33 @@ library(factoextra)
 fviz_mca_var(mca_results_chisq, choice = "mca.cor", axes = c(1, 2), repel = TRUE)
 
 ```
+
+```{r}
+# Charger les bibliothèques nécessaires
+library(FactoMineR)
+library(factoextra)
+
+# Charger les données depuis le fichier CSV
+data <- read.csv('sante_mentale_clean.csv')
+
+# Vérifiez que les colonnes existent
+if (!all(c("niveau_etude", "ville_etude", "age") %in% colnames(data))) {
+  stop("Les colonnes 'niveau_etude', 'ville_etude' ou 'age' ne sont pas présentes dans le fichier CSV.")
+}
+
+# Sélectionner les colonnes qualitatives pour l'ACM
+qualitative_data <- data[, c("niveau_etude", "ville_etude")]
+
+# Ajouter la variable quantitative en tant que variable supplémentaire
+mca_result <- MCA(qualitative_data, quanti.sup = which(colnames(data) == "age"), graph = FALSE)
+
+# Visualiser le cercle de corrélation
+fviz_mca_var(mca_result, 
+             repel = TRUE, # Évite le chevauchement des labels
+             col.var = "blue", # Couleur des variables qualitatives
+             col.quanti.sup = "red", # Couleur de la variable quantitative supplémentaire
+             ggtheme = theme_minimal()) +
+  ggtitle("Cercle de corrélation (ACM)")
+
+```
+

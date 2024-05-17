@@ -47,11 +47,17 @@ aggregate(sub_sante_mentale[], by=list(sub_sante_mentale$depressif), function(x)
 ```{r}
 library(FactoMineR)
 library(factoextra)
+library(klaR)
+library(MASS)
+library(rpart)
+library(rpart.plot)
+library(pROC)
 ```
 
 
 # LDA
 ```{r}
+
 # Assuming all data issues are fixed
 res_lda <- lda(depressif ~ ., data = sub_sante_mentale.train)
 pred_lda <- predict(res_lda, newdata = sub_sante_mentale.test)$class
@@ -210,36 +216,61 @@ print(paste("AUC:", auc_adaboost))
 # Regression logistique --------------------------------------------------------------
 
 ```{r}
+# Assurez-vous que 'depressif' est un facteur (si ce n'est pas déjà le cas)
+sub_sante_mentale.train$depressif <- as.factor(sub_sante_mentale.train$depressif)
+sub_sante_mentale.test$depressif <- as.factor(sub_sante_mentale.test$depressif)
 
-### Modèle
-logit.train <- glm(DIFF ~ ., family = binomial , data=data.train)
+# Créer des matrices pour glmnet sans inclure la colonne 'depressif'
+x_train <- model.matrix(~ . - 1 - depressif, data = sub_sante_mentale.train)  # '-1' pour exclure l'intercept et '-depressif' pour exclure la colonne cible
+y_train <- sub_sante_mentale.train$depressif  # Utiliser 'depressif' comme la variable cible
 
-# régression logistique Lasso
+x_test <- model.matrix(~ . - 1 - depressif, data = sub_sante_mentale.test)
+y_test <- sub_sante_mentale.test$depressif
+
+# Assurer que 'depressif' dans y_train et y_test est bien un facteur numérique pour glmnet
+y_train <- as.numeric(y_train) - 1  # Convertir en 0 et 1 pour glmnet
+y_test <- as.numeric(y_test) - 1
+
 library(glmnet)
-res_Lasso <- glmnet(as.matrix(data.train[,-1]),data.train$DIFF,family='binomial') 
-plot(res_Lasso, label = TRUE)  # en abscisse : norme des coefficients
-plot(res_Lasso, xvar = "lambda", label = TRUE) # en abscisse : log(lambda)
-sum(coef(res_Lasso, s=exp(?))!=0)
+library(pROC)
 
+# Suppose that x_train and y_train are already defined and are numeric matrices/vectors
 
-cvLasso <- cv.glmnet(as.matrix(data.train[,-1]),data.train$DIFF,family="binomial", type.measure = "class") 
-plot(cvLasso)
-cvLasso$lambda.min
-coef(res_Lasso, s=cvLasso$lambda.min)
+# Fit a logistic regression model with Lasso regularization
+lasso_model <- glmnet(x_train, y_train, family = 'binomial', alpha = 1)
 
-#prédiction
-class_logit_lasso=predict(cvLasso, newx = as.matrix(data.test[,-1]), s = 'lambda.min', type = "class")
+# Cross-validation to find the optimal lambda
+cv_lasso <- cv.glmnet(x_train, y_train, family = "binomial")
 
-#Table de confusion et accuracy
+# Plot to visually check the lambda values
+plot(cv_lasso)
 
+# Extract the lambda that minimizes the cross-validation error
+best_lambda <- cv_lasso$lambda.min
+print(paste("Best lambda: ", best_lambda))
 
+# Make sure best_lambda is numeric
+if (!is.numeric(best_lambda)) {
+    stop("best_lambda should be numeric.")
+}
 
-#courbe ROC
-pred_logit_lasso=predict(cvLasso, newx = as.matrix(data.test[,-1]), s = 'lambda.min', type = "response")
-#pred_logit_lasso
-ROC_logit_lasso = roc( data.test$DIFF, pred_logit_lasso)
-ROC_logit_lasso$auc 
+# Prediction using Lasso model
+pred_lasso <- predict(lasso_model, newx = x_test, s = best_lambda, type = "response")
 
+# Convert probabilities to binary outcomes
+predicted_classes <- ifelse(pred_lasso > 0.5, 1, 0)
+
+# Evaluate model
+confusion_matrix <- table(Predicted = predicted_classes, Actual = y_test)
+accuracy_RL <- sum(diag(confusion_matrix)) / length(y_test)
+print(confusion_matrix)
+print(paste("Accuracy:", accuracy))
+
+# ROC Curve and AUC calculation
+ROC_RL <- roc(y_test, pred_lasso[,1])  # make sure to use the correct index if pred_lasso is a matrix
+plot(ROC_RL, print.auc = TRUE)
+auc_value <- auc(ROC_RL)
+print(paste("AUC:", auc_value))
 
 ```
 
@@ -248,7 +279,9 @@ ROC_logit_lasso$auc
 results <- rbind(
   lda=c(Accuracy=accuracy_lda, AUC=as.numeric(ROC_lda$auc)),
   cart=c(Accuracy=accuracy_cart, AUC=as.numeric(ROC_cart$auc)),
-  rf=c(Accuracy=accuracy_RF, AUC=as.numeric(ROC_RF$auc))
+  rf=c(Accuracy=accuracy_RF, AUC=as.numeric(ROC_RF$auc)),
+  adaboost=c(c(Accuracy=accuracy_RL, AUC=as.numeric(ROC_RL$auc))),
+  rl=c(c(Accuracy=accuracy_adaboost, AUC=auc_adaboost))
 )
 results
 
