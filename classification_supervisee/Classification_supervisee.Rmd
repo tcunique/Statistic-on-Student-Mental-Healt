@@ -3,6 +3,8 @@ title: "Classification_supervisée"
 output: html_notebook
 ---
 
+
+Tout d'abord, on filtre les lignes du dataframe pour ne conserver que celles où la variable depressif prend les valeurs "Oui" ou "Non". Ensuite, on convertit toutes les variables du dataframe en facteurs, ce qui permet de traiter chaque colonne comme une variable catégorielle. Enfin on conserve que les colonnes spécifiées : ville_foyer, mange_a_ta_faim, alcool, Conflits.Familiaux, tiers_temps, niveau_etude, anxiété, suivi_psycho, diagnostic_episode_depressif, depressif et suivi_medicale_depressif. 
 ```{r}
 sub_sante_mentale=read.csv("sante_mentale_regrouped.csv")
 sub_sante_mentale <- sub_sante_mentale[sub_sante_mentale$depressif %in% c("Oui", "Non"), ]
@@ -21,9 +23,12 @@ sub_sante_mentale <- sub_sante_mentale[c("ville_foyer", "mange_a_ta_faim", "alco
                         "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif")]
 
 sub_sante_mentale
+attach(sub_sante_mentale)
 ```
 
 
+
+Ce code permet de diviser le jeu de données initial en deux parties : une pour l'entraînement du modèle (sub_sante_mentale.train) et une pour son évaluation (sub_sante_mentale.test).
 ```{r}
 # Préparation des données
 set.seed(1) # Permet de pouvoir reproduire les mêmes résultats
@@ -33,15 +38,13 @@ n.test <- round(n * test.ratio) # Permet de savoir le nombre d'observation pour 
 tr <- sample(1:n, n.test)  
 sub_sante_mentale.test <- sub_sante_mentale[tr, ] 
 sub_sante_mentale.train <- sub_sante_mentale[-tr, ]
-
 ```
 
-```{r}
 
+
+```{r}
 # Examiner les valeurs uniques par groupe de 'depressif'
 aggregate(sub_sante_mentale[], by=list(sub_sante_mentale$depressif), function(x) length(unique(x)))
-
-
 ```
 
 ```{r}
@@ -57,64 +60,29 @@ library(pROC)
 
 # LDA
 ```{r}
-
 # Assuming all data issues are fixed
 res_lda <- lda(depressif ~ ., data = sub_sante_mentale.train)
-pred_lda <- predict(res_lda, newdata = sub_sante_mentale.test)$class
-table_lda <- table(Predicted = pred_lda, Actual = sub_sante_mentale.test$depressif)
-accuracy_lda <- sum(diag(table_lda)) / n.test
-print(accuracy_lda)
-
 ```
 
 
-LDA
-```{r}
-library(MASS)
-# LDA
-res_lda <- lda(sub_sante_mentale$depressif ~ ., data =sub_sante_mentale)
-summary(res_lda)
-```
-
-Prédiction
-```{r}
-pred_lda_classe = predict(res_lda, newdata=sub_sante_mentale.test)$class
-print(pred_lda_classe)
-```
-
-
-Accuracy
-```{r}
-confusion_table_lda <- table(Prédiction = pred_lda_classe, Réalité = sub_sante_mentale.test$depressif)
-print(confusion_table_lda)
-
-print(sum(diag(confusion_table_lda))/n.test)
-
-#accuracy_lda = mean(pred_lda_classe == sub_sante_mentale.test$DIFF)
-#print(accuracy_lda)
-
-```
-
-
-
-Proba
+ROC lda
 ```{r}
 #proba a posteriori de succes (dans la deuxième colonne) : 
-pred_lda <- predict(res_lda,newdata=sub_sante_mentale.test)$posterior[,2] 
+pred_lda <- predict(res_lda,newdata=sub_sante_mentale.test)
 
-ROC_lda <- roc(sub_sante_mentale.test$depressif, pred_lda)
+ROC_lda <- roc(sub_sante_mentale.test$depressif, pred_lda$posterior[,2] )
 plot(ROC_lda, print.auc=TRUE,  print.auc.y = 0.5)
 ROC_lda$auc
 ```
 
 
-
+Accuracy Lda
 ```{r}
-# Courbe ROC pour LDA
-library(pROC)
-pred_lda_prob <- predict(res_lda, newdata=sub_sante_mentale.test)$posterior[,2]
-ROC_lda <- roc(sub_sante_mentale.test$depressif, pred_lda_prob)
-plot(ROC_lda, print.auc=TRUE)
+confusion_table_lda = table(Prédiction = pred_lda$class, Réalité = sub_sante_mentale.test$depressif)
+confusion_table_lda
+
+accuracy_lda = mean(pred_lda$class == sub_sante_mentale.test$depressif)
+accuracy_lda
 ```
 
 
@@ -123,170 +91,154 @@ plot(ROC_lda, print.auc=TRUE)
 ```{r}
 library(rpart)
 arbre.opt <- rpart(depressif~., data=sub_sante_mentale.train)
-pred_cart <- predict(arbre.opt, sub_sante_mentale.test, type="class")
-table_cart <- table(Predicted=pred_cart, Actual=sub_sante_mentale.test$depressif)
-accuracy_cart <- sum(diag(table_cart)) / n.test
-
-# Courbe ROC pour CART
-pred_cart_prob <- predict(arbre.opt, sub_sante_mentale.test, type="prob")[,2]
-ROC_cart <- roc(sub_sante_mentale.test$depressif, pred_cart_prob)
-plot(ROC_cart, print.auc=TRUE)
-
-confusion_table_cart <- table(Prédiction = pred_cart, Réalité = sub_sante_mentale.test$depressif)
-print(confusion_table_cart)
-print(accuracy_cart)
-
-
+rpart.plot(arbre.opt, type=4, digits=3, roundint=FALSE)
 ```
 
 
+ROC Cart
+```{r}
+# Courbe ROC pour CART
+pred_cart <- predict(arbre.opt, sub_sante_mentale.test, type="prob")[,2]
+ROC_cart <- roc(sub_sante_mentale.test$depressif, pred_cart)
+plot(ROC_cart, print.auc=TRUE)
+```
+
+
+Accuracy Cart
+```{r}
+pred_cart_class = predict(arbre.opt, sub_sante_mentale.test, type="class")
+confusion_table_cart = table(Prédiction = pred_cart_class, Réalité = sub_sante_mentale.test$depressif)
+confusion_table_cart
+
+accuracy_cart = mean(pred_cart_class == sub_sante_mentale.test$depressif)
+accuracy_cart
+```
 
 # Random Forest
 
 ```{r}
 library(randomForest)
 fit_RF <- randomForest(depressif~., data=sub_sante_mentale.train)
-pred_RF <- predict(fit_RF, sub_sante_mentale.test, type="class")
-table_RF <- table(Predicted=pred_RF, Actual=sub_sante_mentale.test$depressif)
-accuracy_RF <- sum(diag(table_RF)) / n.test
-
-# Courbe ROC pour Random Forest
-pred_RF_prob <- predict(fit_RF, sub_sante_mentale.test, type="prob")[,2]
-ROC_RF <- roc(sub_sante_mentale.test$depressif, pred_RF_prob)
-plot(ROC_RF, print.auc=TRUE)
-
-confusion_table_RF <- table(Prédiction = pred_RF, Réalité = sub_sante_mentale.test$depressif)
-print(confusion_table_RF)
-print(accuracy_RF)
-
+fit_RF
+plot(fit_RF)
 ```
+C'est très écarté, nous allons donc les rassembler en utilisant la méthode suivante :
+
+Ce code utilise SMOTE pour équilibrer les classes dans le jeu de données d'entraînement, et affiche la nouvelle répartition des classes pour vérifier l'efficacité de l'équilibrage
+
+SMOTE (Synthetic Minority Over-sampling Technique) est une méthode utilisée pour traiter le déséquilibre des classes dans les jeux de données. Le déséquilibre des classes se produit lorsqu'une classe (la classe minoritaire) est sous-représentée par rapport aux autres classes (la classe majoritaire). Ce déséquilibre peut entraîner des modèles biaisés qui performent mal sur la classe minoritaire.
+```{r}
+library(DMwR)
+data.train.balanced <- SMOTE(depressif~., sub_sante_mentale.train)
+table(data.train.balanced$depressif)
+data.train.balanced
+```
+
+Recalculons le tout avec la nouvelle base de donnée équilibrée par la méthode SMOTE
+```{r}
+fit_RF <- randomForest(depressif~.,data.train.balanced)
+fit_RF
+plot(fit_RF)
+```
+
+Nous remarquons que c'est un peu mieux et que cela se rapproche plus.
+
+ROC RandomForest
+```{r}
+## aire sous courbe ROC
+pred_RF = predict(fit_RF, sub_sante_mentale.test, type="prob")[,2] 
+ROC_RF <- roc(sub_sante_mentale.test$depressif, pred_RF)
+ROC_RF$auc
+plot(ROC_RF, print.auc=TRUE,  print.auc.y = 0.5)
+```
+
+Nous remarquons que nous obtenons une meilleure accuracy et une meilleur AUC avec la méthode random forest que par rapport aux deux autres. (LDA, CART)
+Accuracy RandomForest
+```{r}
+pred_RF_class = predict(fit_RF, sub_sante_mentale.test, type="class")
+confusion_table_rf = table(Prédiction = pred_RF_class, Réalité = sub_sante_mentale.test$depressif)
+confusion_table_rf
+
+accuracy_rf = mean(pred_RF_class == sub_sante_mentale.test$depressif)
+accuracy_rf
+```
+
+
 # AdaBoost --------------------------------------------------------------------------
 ```{r}
-
 library(gbm)
 library(ROCR)  # To perform ROC analysis
-
-# Convert 'depressif' to a binary numeric variable where "Non" is 0 and "Oui" is 1
-# Ensure that this transformation covers all data
-sub_sante_mentale$depressif_numeric <- ifelse(sub_sante_mentale$depressif == "Oui", 1, 0)
-
-# Split the data into training and test sets
-set.seed(1)  # For reproducibility
-n <- nrow(sub_sante_mentale)
-test_ratio <- 0.2
-n.test <- round(n * test_ratio)
-tr <- sample(1:n, n.test)
-
-sub_sante_mentale.test <- sub_sante_mentale[tr, ]
-sub_sante_mentale.train <- sub_sante_mentale[-tr, ]
-
-# Train the AdaBoost model using the gbm package
-fit.adaboost <- gbm(depressif_numeric ~ ., data = sub_sante_mentale.train, 
-                    distribution = "adaboost", n.trees = 3000, 
-                    cv.folds = 5, shrinkage = 0.01, interaction.depth = 1)
-
-# Determine the optimal number of trees using cross-validation
-B.opt = gbm.perf(fit.adaboost, method="cv")
-
-# Predict on the test dataset using the optimal number of trees
-pred_adaboost <- predict(fit.adaboost, newdata = sub_sante_mentale.test, 
-                         type = "response", n.trees = B.opt)
-
-# Round predictions to obtain binary outcomes
-predicted <- ifelse(pred_adaboost > 0.5, 1, 0)
-
-# Create a confusion matrix and calculate accuracy
-confusion_adaboost <- table(Predicted = predicted, Actual = sub_sante_mentale.test$depressif_numeric)
-accuracy_adaboost <- sum(diag(confusion_adaboost)) / nrow(sub_sante_mentale.test)
-
-# Calculate the AUC
-pred_obj <- prediction(pred_adaboost, sub_sante_mentale.test$depressif_numeric)
-perf_obj <- performance(pred_obj, "auc")
-auc_adaboost <- perf_obj@y.values[[1]]
-
-# Display the results
-print(confusion_adaboost)
-print(paste("Accuracy:", accuracy_adaboost))
-print(paste("AUC:", auc_adaboost))
-
-
 ```
 
 
-# Regression logistique --------------------------------------------------------------
-
+Ici nous appliquons donc adaboost à la base de donnée. Nous faisons exprès de mettre en valeur numérique pour adaboost
 ```{r}
-# Assurez-vous que 'depressif' est un facteur (si ce n'est pas déjà le cas)
-sub_sante_mentale.train$depressif <- as.factor(sub_sante_mentale.train$depressif)
-sub_sante_mentale.test$depressif <- as.factor(sub_sante_mentale.test$depressif)
-
-# Créer des matrices pour glmnet sans inclure la colonne 'depressif'
-x_train <- model.matrix(~ . - 1 - depressif, data = sub_sante_mentale.train)  # '-1' pour exclure l'intercept et '-depressif' pour exclure la colonne cible
-y_train <- sub_sante_mentale.train$depressif  # Utiliser 'depressif' comme la variable cible
-
-x_test <- model.matrix(~ . - 1 - depressif, data = sub_sante_mentale.test)
-y_test <- sub_sante_mentale.test$depressif
-
-# Assurer que 'depressif' dans y_train et y_test est bien un facteur numérique pour glmnet
-y_train <- as.numeric(y_train) - 1  # Convertir en 0 et 1 pour glmnet
-y_test <- as.numeric(y_test) - 1
-
-library(glmnet)
-library(pROC)
-
-# Suppose that x_train and y_train are already defined and are numeric matrices/vectors
-
-# Fit a logistic regression model with Lasso regularization
-lasso_model <- glmnet(x_train, y_train, family = 'binomial', alpha = 1)
-
-# Cross-validation to find the optimal lambda
-cv_lasso <- cv.glmnet(x_train, y_train, family = "binomial")
-
-# Plot to visually check the lambda values
-plot(cv_lasso)
-
-# Extract the lambda that minimizes the cross-validation error
-best_lambda <- cv_lasso$lambda.min
-print(paste("Best lambda: ", best_lambda))
-
-# Make sure best_lambda is numeric
-if (!is.numeric(best_lambda)) {
-    stop("best_lambda should be numeric.")
-}
-
-# Prediction using Lasso model
-pred_lasso <- predict(lasso_model, newx = x_test, s = best_lambda, type = "response")
-
-# Convert probabilities to binary outcomes
-predicted_classes <- ifelse(pred_lasso > 0.5, 1, 0)
-
-# Evaluate model
-confusion_matrix <- table(Predicted = predicted_classes, Actual = y_test)
-accuracy_RL <- sum(diag(confusion_matrix)) / length(y_test)
-print(confusion_matrix)
-print(paste("Accuracy:", accuracy))
-
-# ROC Curve and AUC calculation
-ROC_RL <- roc(y_test, pred_lasso[,1])  # make sure to use the correct index if pred_lasso is a matrix
-plot(ROC_RL, print.auc = TRUE)
-auc_value <- auc(ROC_RL)
-print(paste("AUC:", auc_value))
-
+fit.adaboost=gbm(as.numeric(depressif)-1 ~., sub_sante_mentale.train, distribution = "adaboost")
+# au lieu de réouvrir le jeu de données, on utilise depressif en tant que variable qualitative, mais on la transforme en variable quantitative prenant les valeurs 0 et 1.
+# vous pouvez vérifier ce que fait :
+  #  as.numeric(data.train$DIFF)
+  #  as.numeric(data.train$DIFF) -1
+fit.adaboost
 ```
+
+
+
+
+
+Les commandes fournies ajustent un modèle de Gradient Boosting Machine (GBM) en utilisant l'algorithme AdaBoost sur le jeu de données sub_sante_mentale.train, avec la variable cible depressif convertie en format numérique. On ajuste donc le modèle en utilisant la validation croisée à 5 plis pour évaluer la performance sur différents nombres d'arbres (jusqu'à 3000) tout en appliquant un taux d'apprentissage (shrinkage) de 0,01. L'objectif de ce processus est d'optimiser le nombre d'arbres (B.opt) pour l'algorithme AdaBoost en identifiant le point où l'erreur de validation croisée est minimisée. 
+```{r}
+### Calibrer B=n.tree par cross-validation : 
+fit.adaboost=gbm(as.numeric(depressif)-1 ~., sub_sante_mentale.train, distribution = "adaboost",cv.folds = 5, shrinkage = 0.01, n.trees=3000)
+gbm.perf(fit.adaboost)
+B.opt = gbm.perf(fit.adaboost, method="cv")
+```
+La courbe montre que le modèle GBM atteint la meilleure performance sur l'ensemble de validation à environ 100 itérations. Au-delà de ce point, ajouter plus d'arbres conduit à un surapprentissage, comme l'indique l'augmentation de l'erreur de validation croisée.
+
+Réappliquons alors l'adaboost en prenant en compte le nombre d'arbre B.opt 
+```{r}
+## prédiction : 
+pred_adaboost = predict(fit.adaboost, newdata=sub_sante_mentale.test, type = "response", n.trees = B.opt)
+
+# Pour le transformer en class : 
+class_adaboost = 1 * (pred_adaboost > 1/2)
+```
+
+Accuracy Adaboost
+```{r}
+confusion_table_adaboost = table(Prédiction = class_adaboost, Réalité = sub_sante_mentale.test$depressif)
+confusion_table_adaboost
+
+accuracy_adaboost = mean(class_adaboost == sub_sante_mentale.test$depressif)
+accuracy_adaboost
+```
+
+
+ROC Adaboost
+```{r}
+## aire sous courbe ROC
+ROC_adaboost <- roc(sub_sante_mentale.test$depressif, pred_adaboost)
+ROC_adaboost$auc
+plot(ROC_adaboost, print.auc=TRUE,  print.auc.y = 0.5)
+```
+La courbe ROC montre que le modèle a une performance acceptable, avec une AUC de 0.779. Cela indique que le modèle est raisonnablement bon pour distinguer entre les classes positives et négatives, performe significativement mieux que le hasard mais n'atteint pas encore la catégorie de performance "bonne".
+
+
 
 # Comparaison des modèles
 ```{r}
-results <- rbind(
-  lda=c(Accuracy=accuracy_lda, AUC=as.numeric(ROC_lda$auc)),
-  cart=c(Accuracy=accuracy_cart, AUC=as.numeric(ROC_cart$auc)),
-  rf=c(Accuracy=accuracy_RF, AUC=as.numeric(ROC_RF$auc)),
-  adaboost=c(c(Accuracy=accuracy_RL, AUC=as.numeric(ROC_RL$auc))),
-  rl=c(c(Accuracy=accuracy_adaboost, AUC=auc_adaboost))
-)
-results
+# Comparaison --------------------------------------------------------------
+result=matrix(NA, ncol=4, nrow=2)
+rownames(result)=c('accuracy', 'AUC')
+colnames(result)=c('lda', 'cart', 'RF', "adaboost")
+result[1,]= c(accuracy_lda, accuracy_cart, accuracy_rf,accuracy_adaboost)
+result[2,]=c(ROC_lda$auc, ROC_cart$auc, ROC_RF$auc,  ROC_adaboost$auc)
+result
+apply(result,1, which.max )
 
-# Afficher les résultats et identifier le meilleur modèle
-best_model <- apply(results, 2, which.max)
-best_model
+plot(ROC_lda, xlim=c(1,0))
+plot(ROC_cart, add=TRUE, col=3)
+plot(ROC_RF, add=TRUE, col=4)
+plot(ROC_adaboost, add=TRUE, col=5)
+legend('bottom', col=1:5, paste(c('lda', 'cart', 'RF', "ada")),  lwd=1)
 ```
-
+Parmi les modèles comparés, le modèle de Random Forest (courbe verte) démontre la meilleure performance en termes de sensibilité et de spécificité, suivi par l'AdaBoost (courbe bleue) et l'analyse discriminante linéaire (LDA, courbe noire). La performance du modèle CART n'est pas clairement visible, mais elle est vraisemblablement moins efficace selon les courbes présentées. Cette analyse suggère que le modèle de Random Forest est le classificateur le plus efficace pour ce jeu de données afin de déterminer si quelqu'un est possiblement dépressif ou non .
