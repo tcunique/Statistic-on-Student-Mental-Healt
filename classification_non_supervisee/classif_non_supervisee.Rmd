@@ -55,7 +55,7 @@ KMEANS sans K choisi :
 ```{r}
 inertie.intra <- rep(0,times=10)
 for (k in 1:10){
-  kmeans.result <- kmeans(sub_sante_mentale_numeric,centers=k,nstart=100)
+  kmeans.result <- kmeans(sub_sante_mentale_numeric.cr,centers=k,nstart=100)
   inertie.intra[k] <- kmeans.result$tot.withinss/kmeans.result$totss
 }
 # graphique
