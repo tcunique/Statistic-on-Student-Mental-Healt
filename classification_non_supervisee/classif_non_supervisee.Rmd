@@ -1,6 +1,8 @@
 ---
 title: "classif_non_supervisee"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2024-05-18"
 ---
 
@@ -14,14 +16,14 @@ for (column in names(sub_sante_mentale)) {
 }
 
 # Subsetting the dataframe to keep only rows where depressif is "Oui" or "Non"
-sub_sante_mentale
+#sub_sante_mentale
 
 # Assuming your data frame is named 'data'
 sub_sante_mentale <- sub_sante_mentale[c("ville_foyer", "mange_a_ta_faim", "alcool", "Conflits.Familiaux", 
                         "tiers_temps", "niveau_etude", "anxiété", "suivi_psycho", 
                         "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif")]
 
-sub_sante_mentale
+#sub_sante_mentale
 ```
 
 On convertit tout en numérique et on centre et réduit
