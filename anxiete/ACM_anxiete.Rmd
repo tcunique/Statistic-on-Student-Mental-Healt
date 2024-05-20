@@ -74,7 +74,7 @@ sub_database_chisq <- sante_mentale %>%
   dplyr::select(ville_foyer, niveau_etude, anxiété, depressif,, alcool, Conflits.Familiaux, tiers_temps )
 
 sub_database_chisq <- sante_mentale %>% 
-  dplyr::select(depressif,ville_foyer,niveau_etude,anxiété,alcool,Conflits.Familiaux,tiers_temps,alcool,vie_sociale,Travail_domicile)
+  dplyr::select(ville_etude,fume,passion,vie_sociale,vie_sociale_periode_controle,ville_etude,Conflits.Familiaux,Conflits.Familiaux,Conflits.Familiaux,Conflits.Familiaux,Conflits.Familiaux)
 
 # Transforme tout ce qui est en caractère en asfactor
 sub_database_chisq[] <- lapply(sub_database_chisq, function(x) if(is.character(x)) factor(x) else x)

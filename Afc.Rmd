@@ -1,0 +1,14 @@
+---
+title: "Description"
+output: html_notebook
+---
+```{r}
+rm(list=ls())
+sante_mentale=read.csv("sante_mentale_clean.csv")
+sante_mentale
+
+library(dplyr)
+
+sub_database <- sante_mentale %>% 
+   dplyr::select(age, niveau_etude)
+```
