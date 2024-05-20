@@ -21,7 +21,7 @@ for (column in names(sub_sante_mentale)) {
 # Assuming your data frame is named 'data'
 sub_sante_mentale <- sub_sante_mentale[c("ville_foyer", "mange_a_ta_faim", "alcool", "Conflits.Familiaux", 
                         "tiers_temps", "niveau_etude", "anxiété", "suivi_psycho", 
-                        "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif")]
+                        "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif","mange_a_ta_faim", "Travail_domicile","vie_sociale")]
 
 #sub_sante_mentale
 ```
@@ -46,7 +46,7 @@ En faisant le barplot on obtient :
 ```{r}
 barplot(cah.ward$height)
 ```
-Nous allons donc considéré 4 classes
+Nous allons donc considéré 3 classes
 
 
 SI imaginions que nous n'avions pas cette information, alors il faudrait faire dans une boucle while un nombre de fois fini kmeans afin de déterminet quelle est le meilleur nombre de centre tout en réduisant l'erreur.
