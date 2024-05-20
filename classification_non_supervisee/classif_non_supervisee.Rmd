@@ -1,0 +1,50 @@
+---
+title: "classif_non_supervisee"
+output: html_document
+date: "2024-05-18"
+---
+
+```{r}
+sub_sante_mentale=read.csv("sante_mentale_regrouped.csv")
+sub_sante_mentale <- sub_sante_mentale[sub_sante_mentale$depressif %in% c("Oui", "Non"), ]
+
+# Convertir toutes les variables du dataframe en facteurs
+for (column in names(sub_sante_mentale)) {
+  sub_sante_mentale[[column]] <- as.factor(sub_sante_mentale[[column]])
+}
+
+# Subsetting the dataframe to keep only rows where depressif is "Oui" or "Non"
+sub_sante_mentale
+
+# Assuming your data frame is named 'data'
+sub_sante_mentale <- sub_sante_mentale[c("ville_foyer", "mange_a_ta_faim", "alcool", "Conflits.Familiaux", 
+                        "tiers_temps", "niveau_etude", "anxiété", "suivi_psycho", 
+                        "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif")]
+
+sub_sante_mentale
+```
+
+```{r}
+sub_sante_mentale_numeric <- as.data.frame(lapply(sub_sante_mentale, function(x) {
+  if(is.factor(x)) as.numeric(x) else x
+}))
+```
+
+
+
+KMEANS sans K choisi :
+```{r}
+inertie.intra <- rep(0,times=10)
+for (k in 1:10){
+  kmeans.result <- kmeans(sub_sante_mentale_numeric,centers=k,nstart=100)
+  inertie.intra[k] <- kmeans.result$tot.withinss/kmeans.result$totss
+}
+# graphique
+plot(1:10,inertie.intra,type="b",xlab="Nb. de groupes",ylab="% inertie intra")
+```
+NOus allons donc choisir K = 3
+```{r}
+kmeans.result <- kmeans(sub_sante_mentale_numeric,centers = 3)
+kmeans.result$size
+```
+

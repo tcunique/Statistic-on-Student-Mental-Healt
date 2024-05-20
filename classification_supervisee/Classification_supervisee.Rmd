@@ -1,10 +1,13 @@
 ---
 title: "Classification_supervisée"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 
 Tout d'abord, on filtre les lignes du dataframe pour ne conserver que celles où la variable depressif prend les valeurs "Oui" ou "Non". Ensuite, on convertit toutes les variables du dataframe en facteurs, ce qui permet de traiter chaque colonne comme une variable catégorielle. Enfin on conserve que les colonnes spécifiées : ville_foyer, mange_a_ta_faim, alcool, Conflits.Familiaux, tiers_temps, niveau_etude, anxiété, suivi_psycho, diagnostic_episode_depressif, depressif et suivi_medicale_depressif. 
+Ces variables ont été sélectionné après l'analyse du chisq2.
 ```{r}
 sub_sante_mentale=read.csv("sante_mentale_regrouped.csv")
 sub_sante_mentale <- sub_sante_mentale[sub_sante_mentale$depressif %in% c("Oui", "Non"), ]
@@ -15,14 +18,14 @@ for (column in names(sub_sante_mentale)) {
 }
 
 # Subsetting the dataframe to keep only rows where depressif is "Oui" or "Non"
-sub_sante_mentale
+#sub_sante_mentale
 
 # Assuming your data frame is named 'data'
 sub_sante_mentale <- sub_sante_mentale[c("ville_foyer", "mange_a_ta_faim", "alcool", "Conflits.Familiaux", 
                         "tiers_temps", "niveau_etude", "anxiété", "suivi_psycho", 
                         "diagnostic_episode_depressif", "depressif", "suivi_medicale_depressif")]
 
-sub_sante_mentale
+#sub_sante_mentale
 attach(sub_sante_mentale)
 ```
 
@@ -131,7 +134,7 @@ SMOTE (Synthetic Minority Over-sampling Technique) est une méthode utilisée po
 library(DMwR)
 data.train.balanced <- SMOTE(depressif~., sub_sante_mentale.train)
 table(data.train.balanced$depressif)
-data.train.balanced
+#data.train.balanced
 ```
 
 Recalculons le tout avec la nouvelle base de donnée équilibrée par la méthode SMOTE
@@ -236,9 +239,9 @@ result
 apply(result,1, which.max )
 
 plot(ROC_lda, xlim=c(1,0))
-plot(ROC_cart, add=TRUE, col=3)
-plot(ROC_RF, add=TRUE, col=4)
-plot(ROC_adaboost, add=TRUE, col=5)
-legend('bottom', col=1:5, paste(c('lda', 'cart', 'RF', "ada")),  lwd=1)
+plot(ROC_cart, add=TRUE, col=2)
+plot(ROC_RF, add=TRUE, col=3)
+plot(ROC_adaboost, add=TRUE, col=4)
+legend('bottom', col=1:4, paste(c('lda', 'cart', 'RF', "ada")),  lwd=1)
 ```
 Parmi les modèles comparés, le modèle de Random Forest (courbe verte) démontre la meilleure performance en termes de sensibilité et de spécificité, suivi par l'AdaBoost (courbe bleue) et l'analyse discriminante linéaire (LDA, courbe noire). La performance du modèle CART n'est pas clairement visible, mais elle est vraisemblablement moins efficace selon les courbes présentées. Cette analyse suggère que le modèle de Random Forest est le classificateur le plus efficace pour ce jeu de données afin de déterminer si quelqu'un est possiblement dépressif ou non .
