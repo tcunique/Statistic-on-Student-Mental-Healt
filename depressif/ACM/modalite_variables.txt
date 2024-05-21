@@ -1,0 +1,64 @@
+      age                    pays_etude        ville_etude alternance etudiant_etranger           foyer             ville_foyer  celibataire vie_associative
+ Min.   :18.00   France           :210   Paris       :87   Non:199    Non:179           En colocation: 44   Paris         : 28   Non: 77     Non:169        
+ 1st Qu.:20.00   Burkina Faso     : 11   Orsay       :33   Oui: 53    Oui: 73           En famille   :117   Lille         : 17   Oui:175     Oui: 83        
+ Median :21.00   Madagascar       : 10   Lille       :31                                En solo      : 91   Orsay         : 12                              
+ Mean   :21.16   Canada           :  9   Ouagadougou :11                                                    Ouagadougou   : 11                              
+ 3rd Qu.:22.00   Emirats Arab Unis:  2   Antananarivo: 9                                                    Aubervilliers :  8                              
+ Max.   :32.00   Tunisie          :  2   Créteil     : 5                                                    Gif-sur-yvette:  8                              
+                 (Other)          :  8   (Other)     :76                                                    (Other)       :168                              
+                  sport     streaming_video  type_streaming_video streaming_audio    type_streaming_audio     job            job_h_semaine   
+ + 5 fois par semaine:  5   Non: 69         Netflix    :134       Non: 91         Apple music  :28        Length:252         Min.   : 0.000  
+ 1 fois par semaine  : 54   Oui:183         Aucun      : 69       Oui:161         Aucun        :91        Class :character   1st Qu.: 0.000  
+ 2-3 fois par semaine: 62                   Disney+    : 19                       Autres       : 4        Mode  :character   Median : 0.000  
+ 4-5 fois par semaine: 22                   Autres     : 10                       Deezer       :21                           Mean   : 2.113  
+ 5 fois par semaine  :  7                   Prime video:  9                       Spotify      :98                           3rd Qu.: 0.000  
+ Presque jamais      :102                   Crunchyroll:  7                       Youtube music:10                           Max.   :23.000  
+                                            (Other)    :  4                                                                                  
+ temps_trajet_ecole mange_a_ta_faim                 livraison_nourriture                   alimentation_équilibrée                                    fume    
+ Min.   : 0.000     Non: 31         1 fois par mois           :19        Je mange pas très sain        : 16        Non                                  :224  
+ 1st Qu.: 0.500     Oui:221         1 fois par semaine        :37        Je mange plutôt sainement     : 75        Ne veux pas se prononcer             :  7  
+ Median : 1.000                     2-3 fois par mois         :97        Je mange très sainement       :  5        Cigarette électronique               :  6  
+ Mean   : 1.429                     Fois par mois             :17        Je ne mange pas sain du tout  : 11        Oui, environ 10 cigarettes par jour ~:  5  
+ 3rd Qu.: 2.000                     Plusieurs fois par semaine:27        Je ne mange pas très sainement: 25        1 par mois                           :  2  
+ Max.   :20.000                     Presque jamais            :55        Je suis moyen(ne)             :120        Oui, environ 2 cigarettes/jour ~     :  2  
+                                                                                                                   (Other)                              :  6  
+                                     alcool    passion        vie_sociale  vie_sociale_periode_controle
+ Ne veux pas se prononcer               :  2   Non: 91   Moyenne    :148   Moyenne    : 70             
+ Non                                    : 94   Oui:161   Peu active : 60   Peu active :172             
+ Oui, de manière modérée                : 39             Très active: 44   Très active: 10             
+ Oui, énormément, je me torche la gueule:  6                                                           
+ Oui, mais seulement en soirée          :107                                                           
+ Tres rarement                          :  2                                                           
+ Très rarement                          :  2                                                           
+                                                                                                                   domaine_etude        parents_divorcés
+ Sciences de l'ingénieur : génie mécanique, génie civil, génie électrique, informatique, génie chimique                   :84    Ne pas répondre: 12    
+ Sciences économiques et commerciales : finance, marketing, gestion, comptabilité                                         :42    Non            :189    
+ Sciences sociales : psychologie, économie, sciences politiques, communication, droit                                     :26    Oui            : 51    
+ Arts et lettres : littérature, langues et linguistique, beaux-arts (peinture, sculpture, etc.), musique, théâtre         :17                           
+ Sciences naturelles : biologie, chimie, physique, géologie, astronomie                                                   :17                           
+ Informatique et technologies de l'information : informatique, réseaux et sécurité informatique, intelligence artificielle:16                           
+ (Other)                                                                                                                  :50                           
+       Conflits.Familiaux Travail_domicile tiers_temps                           situation_financière                           signe_astrologique
+ Ne pas répondre: 22      Non: 73          Non:224     Aisé financièrement                 : 13       Lion (23 juillet - 22 août)        : 25     
+ Non            :169      Oui:179          Oui: 28     Difficultés financières persistantes: 24       Scorpion (23 octobre - 21 novembre): 25     
+ Oui            : 61                                   Difficultés financières temporaires : 63       Balance (23 septembre - 22 octobre): 24     
+                                                       Je ne sais pas                      :  7       Cancer (21 juin - 22 juillet)      : 24     
+                                                       Ne pas répondre                     : 16       Taureau (20 avril - 20 mai)        : 24     
+                                                       Stable financièrement               :129       Vierge (23 août - 22 septembre)    : 23     
+                                                                                                      (Other)                            :107     
+   niveau_etude       difficultées_scolaires                     anxiété    moyen_financier_suivi_psycho suivi_psycho      diagnostic_episode_depressif
+ Bac +1  :25    Je suis moyen(ne): 94        Ne veut pas se prononcer: 24   Non:166                      Non:240      Ne pas se prononcer:  5          
+ Bac +2  :55    Non              :122        Non                     : 96   Oui: 86                      Oui: 12      Non                :238          
+ Bac +3  :64    Oui              : 36        Oui                     :132                                             Oui                :  9          
+ Bac +4  :83                                                                                                                                           
+ Bac +5  :23                                                                                                                                           
+ Doctorat: 2                                                                                                                                           
+                                                                                                                                                       
+                    depressif          suivi_medicale_depressif                    pathologie 
+ Je ne sais pas          : 60   Ne pas se prononcer:  8         Ne veut pas se prononcer:  8  
+ Ne veut pas se prononcer:  4   Non                :237         Non                     :215  
+ Non                     :149   Oui                :  7         Oui                     : 29  
+ Oui                     : 39                                                                 
+                                                                                              
+                                                                                              
+                                                                                              

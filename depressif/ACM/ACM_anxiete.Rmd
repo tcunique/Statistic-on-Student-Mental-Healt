@@ -1,0 +1,394 @@
+---
+title: "projet"
+output: html_document
+date: "2024-04-09"
+---
+
+
+1) ACM
+
+```{r}
+rm(list=ls())
+sante_mentale=read.csv("sante_mentale_prononcer.csv")
+sante_mentale
+```
+
+# Variables du test de chiqs2 par rapport à depressif
+
+
+```{r}
+library(dplyr)
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+ sub_database <- sante_mentale %>% 
+   dplyr::select(anxiété,suivi_psycho,diagnostic_episode_depressif,depressif,suivi_medicale_depressif,niveau_etude,tiers_temps,Travail_domicile,Conflits.Familiaux,vie_sociale,alcool,mange_a_ta_faim,ville_foyer)
+ 
+# Transforme tout ce qui est en caractère en asfactor
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+
+
+```
+
+
+
+```{r}
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results <- MCA(sub_database, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results$eig)
+```
+
+
+
+```{r}
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+
+# Visualiser le cercle de corrélation des variables pour les deux premières dimensions
+plot_1_2 = fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1, 2), repel = TRUE) +
+  theme_minimal(base_size = 20) +  # Augmenter la taille du texte de base
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Assurer un fond blanc
+        panel.background = element_rect(fill = "white", color = NA)) # Assurer un fond de panneau blanc
+
+
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(2, 3), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(4, 5), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1,5), repel = TRUE)
+
+plot_mca = plot.MCA(mca_results, invisible=c("ind"), hab="quali", palette=palette(c("blue","orange","darkgreen")),repel = TRUE) +
+              theme_minimal(base_size = 20) +  # Increase base text size
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Ensure white background
+        panel.background = element_rect(fill = "white", color = NA)) # Ensure panel background is white
+
+# Enregistrer l'image
+ggsave("mca_factor_map_large_depressif.png",plot = plot_mca, width = 30, height = 30, dpi = 300)
+ggsave("mca_corr_axes_1_2_depressif.png", plot = plot_1_2, width = 30, height = 30, dpi = 300)
+
+print(plot_mca)
+```
+
+# Variables de l'environnement de vie et familiale
+```{r}
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+ sub_database <- sante_mentale %>% 
+   dplyr::select(age,
+pays_etude,
+ville_etude,
+alternance,
+etudiant_etranger,
+foyer,
+ville_foyer,
+celibataire,
+vie_associative,
+sport,
+streaming_video,
+streaming_audio,
+job,
+mange_a_ta_faim,
+livraison_nourriture,
+alimentation_équilibrée,
+fume,
+alcool,
+passion,
+vie_sociale,
+vie_sociale_periode_controle,
+domaine_etude,
+parents_divorcés,
+Conflits.Familiaux,
+Travail_domicile,
+tiers_temps,
+situation_financière,
+signe_astrologique,
+niveau_etude,
+difficultées_scolaires,
+anxiété,
+moyen_financier_suivi_psycho,
+suivi_psycho,
+diagnostic_episode_depressif,
+depressif,
+suivi_medicale_depressif,
+pathologie)
+ 
+ sub_database <- sante_mentale %>% 
+   dplyr::select(age,
+situation_financière,
+etudiant_etranger,
+foyer,
+parents_divorcés,
+Conflits.Familiaux,
+Travail_domicile,
+anxiété,
+depressif,
+)
+ 
+
+ 
+# Transforme tout ce qui est en caractère en asfactor
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results <- MCA(sub_database, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results$eig)
+
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+
+# Visualiser le cercle de corrélation des variables pour les deux premières dimensions
+plot_1_2 = fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1, 2), repel = TRUE) +
+  theme_minimal(base_size = 20) +  # Augmenter la taille du texte de base
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Assurer un fond blanc
+        panel.background = element_rect(fill = "white", color = NA)) # Assurer un fond de panneau blanc
+
+
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(2, 3), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(4, 5), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1,5), repel = TRUE)
+
+plot_mca = plot.MCA(mca_results, invisible=c("ind"), hab="quali", palette=palette(c("blue","orange","darkgreen")),repel = TRUE) +
+              theme_minimal(base_size = 20) +  # Increase base text size
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Ensure white background
+        panel.background = element_rect(fill = "white", color = NA)) # Ensure panel background is white
+
+# Enregistrer l'image
+ggsave("mca_factor_map_large_vie_famille.png",plot = plot_mca, width = 30, height = 30, dpi = 300)
+ggsave("mca_corr_axes_1_2_vie_famille.png", plot = plot_1_2, width = 30, height = 30, dpi = 300)
+
+print(plot_1_2)
+print(plot_mca)
+
+```
+# Variables de la situation scolaire
+
+```{r}
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+ sub_database <- sante_mentale %>% 
+   dplyr::select(age,
+pays_etude,
+ville_etude,
+alternance,
+etudiant_etranger,
+foyer,
+ville_foyer,
+celibataire,
+vie_associative,
+sport,
+streaming_video,
+streaming_audio,
+job,
+mange_a_ta_faim,
+livraison_nourriture,
+alimentation_équilibrée,
+fume,
+alcool,
+passion,
+vie_sociale,
+vie_sociale_periode_controle,
+domaine_etude,
+parents_divorcés,
+Conflits.Familiaux,
+Travail_domicile,
+tiers_temps,
+situation_financière,
+signe_astrologique,
+niveau_etude,
+difficultées_scolaires,
+anxiété,
+moyen_financier_suivi_psycho,
+suivi_psycho,
+diagnostic_episode_depressif,
+depressif,
+suivi_medicale_depressif,
+pathologie)
+ 
+ sub_database <- sante_mentale %>% 
+   dplyr::select(
+alternance,
+etudiant_etranger,
+vie_associative,
+tiers_temps,
+niveau_etude,
+difficultées_scolaires,
+anxiété,
+depressif,
+)
+ 
+
+ 
+# Transforme tout ce qui est en caractère en asfactor
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results <- MCA(sub_database, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results$eig)
+
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+
+# Visualiser le cercle de corrélation des variables pour les deux premières dimensions
+plot_1_2 = fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1, 2), repel = TRUE) +
+  theme_minimal(base_size = 20) +  # Augmenter la taille du texte de base
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Assurer un fond blanc
+        panel.background = element_rect(fill = "white", color = NA)) # Assurer un fond de panneau blanc
+
+
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(2, 3), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(4, 5), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1,5), repel = TRUE)
+
+plot_mca = plot.MCA(mca_results, invisible=c("ind"), hab="quali", palette=palette(c("blue","orange","darkgreen")),repel = TRUE) +
+              theme_minimal(base_size = 20) +  # Increase base text size
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Ensure white background
+        panel.background = element_rect(fill = "white", color = NA)) # Ensure panel background is white
+
+# Enregistrer l'image
+ggsave("mca_factor_map_large_situation_scolaire.png",plot = plot_mca, width = 30, height = 30, dpi = 300)
+ggsave("mca_corr_axes_1_2_situation_scolaire.png", plot = plot_1_2, width = 30, height = 30, dpi = 300)
+
+print(plot_1_2)
+print(plot_mca)
+```
+# Variables de la consommation alimentaire
+
+```{r}
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+ 
+ sub_database <- sante_mentale %>% 
+   dplyr::select(
+mange_a_ta_faim,
+livraison_nourriture,
+alimentation_équilibrée,
+alcool,
+anxiété,
+situation_financière,
+depressif,
+)
+ 
+
+ 
+# Transforme tout ce qui est en caractère en asfactor
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results <- MCA(sub_database, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results$eig)
+
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+
+# Visualiser le cercle de corrélation des variables pour les deux premières dimensions
+plot_1_2 = fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1, 2), repel = TRUE) +
+  theme_minimal(base_size = 20) +  # Augmenter la taille du texte de base
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Assurer un fond blanc
+        panel.background = element_rect(fill = "white", color = NA)) # Assurer un fond de panneau blanc
+
+
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(2, 3), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(4, 5), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1,5), repel = TRUE)
+
+plot_mca = plot.MCA(mca_results, invisible=c("ind"), hab="quali", palette=palette(c("blue","orange","darkgreen")),repel = TRUE) +
+              theme_minimal(base_size = 20) +  # Increase base text size
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Ensure white background
+        panel.background = element_rect(fill = "white", color = NA)) # Ensure panel background is white
+
+# Enregistrer l'image
+ggsave("mca_factor_map_large_alimentation.png",plot = plot_mca, width = 30, height = 30, dpi = 300)
+ggsave("mca_corr_axes_1_2_alimentation.png", plot = plot_1_2, width = 30, height = 30, dpi = 300)
+
+print(plot_1_2)
+print(plot_mca)
+```
+# Variables de la vie personnelle
+
+```{r}
+# Permet de créer une sous base de donnée avec juste les variables qu'on veut
+ 
+ sub_database <- sante_mentale %>% 
+   dplyr::select(age,
+celibataire,
+sport,
+streaming_video,
+streaming_audio,
+job,
+passion,
+fume,
+vie_sociale,
+anxiété,
+depressif,
+)
+ 
+
+ 
+# Transforme tout ce qui est en caractère en asfactor
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+library(FactoMineR)
+# Perform MCA on the sub-database
+mca_results <- MCA(sub_database, graph = FALSE)
+# Afficher la variance expliquée par chaque dimension
+print(mca_results$eig)
+
+# If you have the factoextra package installed, you can visualize the results:
+library(factoextra)
+
+# Visualiser le cercle de corrélation des variables pour les deux premières dimensions
+plot_1_2 = fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1, 2), repel = TRUE) +
+  theme_minimal(base_size = 20) +  # Augmenter la taille du texte de base
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Assurer un fond blanc
+        panel.background = element_rect(fill = "white", color = NA)) # Assurer un fond de panneau blanc
+
+
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(2, 3), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(4, 5), repel = TRUE)
+fviz_mca_var(mca_results, choice = "mca.cor", axes = c(1,5), repel = TRUE)
+
+plot_mca = plot.MCA(mca_results, invisible=c("ind"), hab="quali", palette=palette(c("blue","orange","darkgreen")),repel = TRUE) +
+              theme_minimal(base_size = 20) +  # Increase base text size
+  theme(axis.text.x = element_text(size = 18), 
+        axis.text.y = element_text(size = 18),
+        plot.title = element_text(size = 24),
+        plot.background = element_rect(fill = "white", color = NA), # Ensure white background
+        panel.background = element_rect(fill = "white", color = NA)) # Ensure panel background is white
+
+# Enregistrer l'image
+ggsave("mca_factor_map_large_vie_personnelle.png",plot = plot_mca, width = 30, height = 30, dpi = 300)
+ggsave("mca_corr_axes_1_2_vie_personnelle.png", plot = plot_1_2, width = 30, height = 30, dpi = 300)
+
+print(plot_1_2)
+print(plot_mca)
+
+```
