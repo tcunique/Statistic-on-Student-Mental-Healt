@@ -1,1 +1,43 @@
-Test
+Voici une description rapide des différentes variables afin d'avoir une idée plus clair des différentes réponses et des questions : 
+
+- age : Quel âge as-tu ?
+- pays_etude : Dans quelle pays tu fais tes études ?
+- ville_etude : Dans quelle ville tu fais tes études ?
+- alternance : Es-tu en alternance ?
+- etudiant_etranger : Es-tu étudiant étranger dans ton établissement ? (Viens-tu d'un pays différent de celui où tu étudies actuellement)
+- foyer : Tu vis seul(e), en colocation ou avec ta famille ? 
+- ville_foyer : Tu habites dans quelle ville ? 
+- celibataire : Es-tu célibataire ? 
+- vie_associative : Est-ce que tu participes à la vie associative à l'école/université ? 
+- sport : Est-ce que tu fais du sport régulièrement ? 
+- streaming_video : As-tu un abonnement à une application de streaming vidéo ? (Netflix, Disney+, etc.)
+- types_streaming_video : Si oui, quel abonnement de streaming vidéo as-tu ? (Un seul, le plus utilisé) 
+- streaming_audio : As-tu un abonnement à une application de straming audio ? (YouTube Music, Spotify, Deezer, etc.)
+- type_streaming_audio : Si oui, quel abonnement de streaming audio as-tu ? (Un seul, le plus utilisé)
+- job : Est-ce que tu as un job étudiant ?
+- job_h_semaine : Si oui, combien d'heures passes-tu à ce job par semaine ?
+- temps_trajet_ecole : Combien de temps cela prend-il pour aller à l'école, y compris le trajet aller-retour ?
+- mange_a_ta_faim : Est-ce que tu manges à ta faim ?
+- livraison_nourriture : À quelle fréquence manges-tu au fast-food ou te fais-tu livrer ?
+- alimentation_équilibrée : Pour toi, à quel point manges-tu sainement ?
+- fume : Est-ce que tu fumes ? Si oui, à quelle fréquence ?
+- alcool :  Est-ce que tu bois de l'alcool ?
+- passion : As-tu le temps d'avoir des passions en dehors de l'école ? 
+- vie_sociale : Considères-tu ta vie sociale (hors période de partiels) comme... (Choix entre Très active, Moyenne ou Peu Active)
+- vie_sociale_periode_controle : Considères-tu ta vie sociale EN PERIODE DE PARTIEL OU CONTROLE comme .. (Choix entre Très active, Moyenne ou Peu Active)
+- domaine_etude : Dans quelle domaine d’étude tu es ?
+- parents_divocrés : Tes parents sont-ils divorcés ?
+- Conflits.Familiaux : As tu des conflits familiaux ?
+- Travail_domicile : Arrives-tu à travailler chez toi ?
+- tiers_temps : Bénéficies-tu du tiers temps ?
+- situation_financière : Quelle est ta situation financière actuelle ? (honnêtement)
+- signe_astrologique : Quel est ton signe astrologique ?
+- niveau_etude : Quel est ton niveau d'étude ?
+- difficultées_scolaires : Est ce que tu trouves que tu as des difficultés scolaire ?
+- anxiété : Souffres-tu d'anxiété ?
+- moyen_financier_suivi_psychi : As-tu les moyens pour te financier un suivi psychologique ?
+- suivi_psycho : Bénéficies-tu un suivi psychologique ?
+- diagnosttic_episode_depressif : As- tu reçu le diagnostic d'épisode dépressif caractérisé de la part d'un médecin ?
+- depressif : Est-ce que tu te considères comme étant dépressif ?
+- suivi_medicale_depressif : Si oui, bénéficies-tu d'un suivi médicale (psychiatre) pour ce diagnostic ?
+- pathlogie : Souffrez-vous d'une pathologie ?
