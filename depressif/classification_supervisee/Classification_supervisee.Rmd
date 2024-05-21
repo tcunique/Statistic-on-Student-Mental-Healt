@@ -9,7 +9,7 @@ output:
 Tout d'abord, on filtre les lignes du dataframe pour ne conserver que celles où la variable depressif prend les valeurs "Oui" ou "Non". Ensuite, on convertit toutes les variables du dataframe en facteurs, ce qui permet de traiter chaque colonne comme une variable catégorielle. Enfin on conserve que les colonnes spécifiées : ville_foyer, mange_a_ta_faim, alcool, Conflits.Familiaux, tiers_temps, niveau_etude, anxiété, suivi_psycho, diagnostic_episode_depressif, depressif et suivi_medicale_depressif. 
 Ces variables ont été sélectionné après l'analyse du chisq2.
 ```{r}
-sub_sante_mentale=read.csv("sante_mentale_regrouped.csv")
+sub_sante_mentale=read.csv("sante_mentale_prononcer.csv")
 sub_sante_mentale <- sub_sante_mentale[sub_sante_mentale$depressif %in% c("Oui", "Non"), ]
 
 # Convertir toutes les variables du dataframe en facteurs

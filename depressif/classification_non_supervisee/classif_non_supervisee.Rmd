@@ -41,15 +41,17 @@ Faisons d'abord le CAH
 d.sub_sante_mentale_numeric = dist(sub_sante_mentale_numeric.cr)
 cah.ward <- hclust(d.sub_sante_mentale_numeric, method="ward.D2")
 plot(cah.ward,hang=-1)
+# Dessiner des rectangles autour des clusters pour K = 3
+rect.hclust(cah.ward, k = 3, border = 2:5)
 ```
 En faisant le barplot on obtient :
 ```{r}
 barplot(cah.ward$height)
 ```
-Nous allons donc considéré 3 classes
+Nous allons donc considérer 3 classes
 
 
-SI imaginions que nous n'avions pas cette information, alors il faudrait faire dans une boucle while un nombre de fois fini kmeans afin de déterminet quelle est le meilleur nombre de centre tout en réduisant l'erreur.
+Imaginons que nous n'avions pas cette information, alors il faudrait faire dans une boucle while un nombre de fois fini kmeans afin de déterminet quelle est le meilleur nombre de centre tout en réduisant l'erreur.
 
 KMEANS sans K choisi :
 ```{r}
@@ -61,7 +63,7 @@ for (k in 1:10){
 # graphique
 plot(1:10,inertie.intra,type="b",xlab="Nb. de groupes",ylab="% inertie intra")
 ```
-NOus allons donc choisir K = 4
+Nous allons donc choisir K = 3
 ```{r}
 kmeans.result <- kmeans(sub_sante_mentale_numeric,centers = 3)
 kmeans.result$size
@@ -72,5 +74,17 @@ On peut alors faire une ACP pour l'interprétation
 ```{r}
 library(FactoMineR)
 res = PCA(sub_sante_mentale_numeric,scale.unit = TRUE)
+```
+```{r}
+# Ajouter les clusters obtenus par K-means au data frame des résultats de la PCA
+pca_data <- data.frame(res$ind$coord, cluster = as.factor(kmeans.result$cluster))
+
+# Visualiser les clusters sur le plan factoriel avec ggplot2
+fviz_pca_ind(res, geom.ind = "point", col.ind = pca_data$cluster, palette = "jco", 
+             addEllipses = TRUE, ellipse.type = "convex", legend.title = "Cluster", 
+             repel = TRUE) + 
+  ggtitle("PCA - Clustering des individus") + 
+  theme_minimal()
+
 ```
 

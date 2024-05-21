@@ -1,0 +1,45 @@
+---
+title: "Description"
+output: html_notebook
+---
+```{r}
+rm(list=ls())
+# Lire les données
+sante_mentale <- read.csv("sante_mentale_regrouped.csv")
+
+# Afficher un aperçu des données
+print(head(sante_mentale))
+
+# Charger le package dplyr pour manipuler les données
+library(dplyr)
+
+# Sélectionner les colonnes d'intérêt
+sub_database <- sante_mentale %>% 
+   dplyr::select(age, niveau_etude)
+
+# Transformer les colonnes en facteurs
+sub_database[] <- lapply(sub_database, function(x) if(is.character(x)) factor(x) else x)
+
+# Afficher un aperçu de la base de données transformée
+print(head(sub_database))
+
+```
+```{r}
+# Charger le package FactoMineR pour réaliser l'AFC
+library(FactoMineR)
+
+# Réaliser l'AFC
+resultat_afc <- CA(sub_database, graph = FALSE)
+
+# Afficher les résultats de l'AFC
+print(resultat_afc)
+
+```
+
+```{r}
+sante_mentale <- read.csv("sante_mentale_clean.csv")
+
+chi2_result <- chisq.test(sante_mentale$age, sante_mentale$niveau_etude)
+print(chi2_result)
+```
+
