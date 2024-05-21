@@ -34,7 +34,6 @@ Voici une description rapide des différentes variables afin d'avoir une idée p
 - signe_astrologique : Quel est ton signe astrologique ?
 - niveau_etude : Quel est ton niveau d'étude ?
 - difficultées_scolaires : Est ce que tu trouves que tu as des difficultés scolaire ?
-- anxiété : Souffres-tu d'anxiété ?
 - moyen_financier_suivi_psychi : As-tu les moyens pour te financier un suivi psychologique ?
 - suivi_psycho : Bénéficies-tu un suivi psychologique ?
 - diagnosttic_episode_depressif : As- tu reçu le diagnostic d'épisode dépressif caractérisé de la part d'un médecin ?
